@@ -164,7 +164,7 @@ function renderGrid() {
         block = gridArr[j][k];
       }
       if (!block) {
-        block = "⬜";
+        block = "▫";
       }
       str += block;
     }
@@ -187,7 +187,7 @@ function renderGrid() {
     }
     str += "<br>";
   }
-  grid.innerHTML = str;
+  grid.innerHTML = twemoji.parse(str);
 }
 
 function maybeRenderPiece(row, col) {
@@ -203,7 +203,7 @@ function renderNextPieceRow(row) {
   if (row >= nextPieceArr.length) return result;
   var pieceRow = nextPieceArr[row]
   for (var k = 0; k < pieceRow.length; k++) {
-    result += pieceRow[k] || "⬜";
+    result += pieceRow[k] || "▫";
   }
   return result;
 }
