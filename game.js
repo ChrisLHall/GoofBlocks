@@ -256,7 +256,7 @@ function rotatePiece(forward) {
     halfDiff *= -1;
   }
   result.row = Math.max(piece.row - halfDiff, 0);
-  result.col = piece.col + halfDiff;
+  result.col = Math.min(Math.max(piece.col + halfDiff, 0), WIDTH - result.width);
   return result;
 }
 
