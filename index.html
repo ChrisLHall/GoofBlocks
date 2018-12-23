@@ -1,0 +1,26 @@
+<html><head>
+<title>Goof Blocks</title>
+<meta charset='UTF-8' />
+<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=0"/> <!--320-->
+<link rel="stylesheet" href="page.css">
+</head>
+<body>
+
+<p id='grid'>hi</p>
+
+<input type="button" style='width:100px; height:100px' value="<-" onclick="pressLeft()" />
+<input type="button" style='width:100px; height:100px' value="turn" onclick="pressSpin()" />
+<input type="button" style='width:100px; height:100px' value="->" onclick="pressRight()" />
+<br>
+<input type="button" style='width:300px; height:50px' value="DROP EM" onclick="pressDown()" />
+<br>
+<p><input type="button" value="reload" onclick="window.location.reload(true)" /></p>
+<p id="DEBUGTEXT"></p>
+
+<script type="text/javascript" src="game.js"></script>
+<script type="text/javascript" src="debug.js"></script>
+<script type="text/javascript">
+  startGame();
+</script>
+</body>
+</html>
