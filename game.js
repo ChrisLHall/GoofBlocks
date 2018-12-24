@@ -421,6 +421,37 @@ function pressSpin() {
 
 function pressDown() {
   if (stopped) return;
+  if (canMovePiece(1, 0)) {
+    piece.row++;
+    renderGrid();
+  }
+}
+
+function pressDrop() {
+  if (stopped) return;
   dropPiece();
   renderGrid();
+}
+
+document.onkeydown = checkKey;
+
+function checkKey(e) {
+  e = e || window.event;
+
+  if (e.keyCode == '38') {
+    // up arrow
+    pressSpin();
+  } else if (e.keyCode == '40') {
+    // down arrow
+    pressDown();
+  } else if (e.keyCode == '37') {
+    // left arrow
+    pressLeft();
+  } else if (e.keyCode == '39') {
+    // right arrow
+    pressRight();
+  } else if (e.keyCode == '32') {
+    // spacebar
+    pressDrop();
+  }
 }
