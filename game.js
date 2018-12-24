@@ -20,7 +20,7 @@ var piece = {
 
 var nextPieceArr = null;
 
-var PIECES = [
+var PIECES_STANDARD = [
   [["✈"]],
   [["🚗","🚗"]],
   [["🚜","🚜","🚜"]],
@@ -85,6 +85,71 @@ var PIECES = [
    ["🍄","🍄","🍄"],
    [null,"🍄",null]],
 ];
+var PIECES_TETRA = [
+  [["❄"]],
+  [["☃","☃"]],
+  [["☁","☁","☁"]],
+  [["⭕","⭕"],
+   [null,"⭕"]],
+  // 4
+  [["⭐","⭐","⭐","⭐"]],
+  [["☄","☄","☄"],
+   ["☄",null,null]],
+  [["❇","❇","❇"],
+   [null,null,"❇"]],
+  [["🌠","🌠",null],
+   [null,"🌠","🌠"]],
+  [[null,"🎆","🎆"],
+   ["🎆","🎆",null]],
+  [[null,"🌙",null],
+   ["🌙","🌙","🌙"]],
+  [["🔥","🔥"],
+   ["🔥","🔥"]],
+];
+var PIECES_BOXING = [
+  [["☮","☮"]],
+  [["♈","♈"],
+   ["♈","♈"]],
+  [["➡","➡","➡"],
+   ["➡","➡","➡"]],
+  [["♉","♉","♉"],
+   ["♉","♉","♉"],
+   ["♉","♉","♉"]],
+  [["⛓","⛓","⛓"],
+   ["⛓",null,"⛓"],
+   ["⛓","⛓","⛓"]],
+  [["♎","♎","♎","♎"],
+   ["♎","♎","♎","♎"]],
+  [["⛔","⛔","⛔","⛔"],
+   ["⛔",null,null,"⛔"],
+   ["⛔",null,null,"⛔"],
+   ["⛔","⛔","⛔","⛔"]],
+  [["🔆","🔆","🔆","🔆"]],
+];
+var PIECES_BONELESS = [
+  [["☠",null,"☠"],
+   [null,"☠","☠"]],
+  [["💀",null,"💀"],
+   ["💀","💀",null]],
+  [["👻",null,"👻"],
+   ["👻",null,"👻"]],
+  [["😈",null,"😈","😈","😈"]],
+  [["😱","😱",null,null],
+   [null,null,"😱","😱"]],
+  [[null,null,"😵","😵"],
+   ["😵","😵",null,null]],
+  [["❌",null,null],
+   [null,null,null],
+   ["❌","❌","❌"]],
+  [[null,null,"✖"],
+   [null,null,null],
+   ["✖","✖","✖"]],
+  [[null,null,"👾",null,null],
+   [null,null,null,null,null],
+   ["👾",null,"👾",null,"👾"]],
+];
+
+var PIECES = PIECES_STANDARD;
 
 function choose(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -104,6 +169,40 @@ function copyTranspose(arr) {
   return result;
 }
 
+var name = "";
+function setupPieces() {
+  var plainHref = window.location.href;
+  var origLoc = window.location.search;
+  plainHref = plainHref.substring(0, plainHref.length - origLoc.length);
+  var newLoc = "?standard";
+  if (origLoc === "?tetra") {
+    newLoc = origLoc;
+    PIECES = PIECES_TETRA; 
+  } else if (origLoc === "?boxing") {
+    newLoc = origLoc;
+    PIECES = PIECES_BOXING;
+  } else if (origLoc === "?boneless") {
+    newLoc = origLoc;
+    PIECES = PIECES_BONELESS;
+  }
+  if (origLoc !== newLoc) {
+    window.location.href = plainHref + newLoc;
+  }
+  if (newLoc !== "?standard") {
+    name = newLoc.substring(1,2).toUpperCase() + newLoc.substring(2);
+  }
+}
+
+function loadNextPiece() {
+  nextPieceArr = nextPieceArr || copyTranspose(choose(PIECES));
+  piece.arr = nextPieceArr
+  piece.height = piece.arr.length;
+  piece.width = piece.arr[0].length;
+  piece.row = 0;
+  piece.col = Math.floor((WIDTH - piece.width) / 2);
+  nextPieceArr = copyTranspose(choose(PIECES));
+}
+
 function startGame() {
   for (var j = 0; j < HEIGHT; j++) {
     gridArr.push([]);
@@ -111,7 +210,8 @@ function startGame() {
       gridArr[j].push(null);
     }
   }
-  nextPieceArr = copyTranspose(choose(PIECES));
+  setupPieces();
+  loadNextPiece();
   setTimeout(gameLoop, FRAME_TIME);
 }
 
@@ -123,12 +223,7 @@ function gameLoop() {
         piece.row++;
       } else {
         commitPiece();
-        piece.arr = nextPieceArr
-        nextPieceArr = copyTranspose(choose(PIECES));
-        piece.height = piece.arr.length;
-        piece.width = piece.arr[0].length;
-        piece.row = 0;
-        piece.col = Math.floor((WIDTH - piece.width) / 2);
+        loadNextPiece();
         if (!canMovePiece(0, 0)) {
           stopped = true;
         }
